@@ -24,11 +24,21 @@ def filter_instances(project):
     
     return instances
 
-
-# Grouping some of the commands together using click
 @click.group()
+def cli():
+    """shotty manages snapshots"""
+
+
+@cli.group('volumes')
+def volumes():
+    """Commands for volumes"""
+
+
+@cli.group('instances')
 def instances():
     """ Commands for instances"""
+
+
 @instances.command('list')
 @click.option('--project', default=None,
                 help="only intances for project (tag Project=<name>)")
@@ -79,4 +89,4 @@ def start_instances(project):
 
 
 if __name__ == '__main__':
-    instances()
+    cli()
