@@ -9,6 +9,7 @@ name = "pypi"
 pylint = "*"
 pip = "*"
 click = "*"
+bpython = "*"
 
 [dev-packages]
 ipython = "*"
