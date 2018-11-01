@@ -2,7 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.vscode
+*.swap
+*.csv
+*.lock
+pipfile.lock
 # C extensions
 *.so
 
