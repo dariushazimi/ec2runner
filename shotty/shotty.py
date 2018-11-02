@@ -7,6 +7,7 @@
 # the project tag is set to spider on the ec2 instances)
 import boto3
 import click
+from datetime import datetime
 # import os
 
 session = boto3.Session(profile_name='snapshotty')
@@ -28,10 +29,36 @@ def cli():
     """shotty manages snapshots"""
 
 
+@cli.group('snapshots')
+def snapshots():
+    """Commands for snapshots"""
+
+
+@snapshots.command('list')
+@click.option('--project', default=None, help="only volumes for project (tag project:<name>)")
+def list_snapshots(project):
+    '''
+    List snapshots 
+    '''
+
+    instances= filter_instances(project)
+    for i in instances:
+        for v in i.volumes.all():
+            for s in v.snapshots.all():
+                print(', '.join((
+                    s.id,
+                    v.id,
+                    i.id,
+                    s.progress,
+                    s.start_time.strftime("%c"),
+                    s.encrypted and "Encrypted" or "Not Encrypted"
+                )))
+    return
+
+
 @cli.group('volumes')
 def volumes():
     """Commands for volumes"""
-
 
 @volumes.command('list')
 @click.option('--project', default=None, help="only volumes for project (tag project:<name>)")
@@ -51,6 +78,7 @@ def list_volumes(project):
                 v.encrypted and "Encrypted" or "Not Encrypted"
             )))
     return
+
 
 @cli.group('instances')
 def instances():
