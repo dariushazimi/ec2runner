@@ -88,12 +88,39 @@ def instances():
 @click.option('--project', default=None, help="only intances for project (tag Project=<name>)")
 def create_snapshot(project):
     ''' Create snapshots for ec2 instances'''
+
     instances = filter_instances(project)
 
     for i in instances:
-        for v in i.volume.all():
+        print("stopping {0}... ".format(i.id))
+        i.stop()
+        i.wait_until_stopped()
+        # wait for the instances to stop befor taking
+        # snapshots
+        for v in i.volumes.all():
             print("Creating snapshot of {0}".format(v.id))
             v.create_snapshot(Description="Created by snapshot_analyzer 2018v1101")
+        # restart the instance once the snapshot 
+        # has started    
+        print("starting {0}...".format(i.id))
+        i.start()
+        # We don't need to wait for the snapshot to complete
+        # Once the snapshot process has started
+        # Its safe to start the instance
+        # wait till the intance is running to make sure
+        # one of our instances are stopped at any given datetime A combination of a date and a time. Attributes: ()
+        # if in prod, and instances are servicing client, you want to make sure
+        # you kick off the snapshot for one instance datetime A combination of a date and a time. Attributes: ()
+        i.wait_until_running()
+        '''
+        Examples, list instances, start instances and take snap
+        pipenv run python shotty/shotty.py instances list
+        pipenv run python shotty/shotty.py instances start
+        pipenv run python shotty/shotty.py instances snapshot --project="spider"
+
+        '''
+
+    print("Job's done!")
     return
 
 

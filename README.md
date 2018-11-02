@@ -3,17 +3,17 @@
 Build with :heart:
 AWS: Manage AWS Ec2 instance snapshots, start and stop instances, display the list of instances along with volumes and snapshots.
 
-## About
+## About:pencil2:
 
 This project uses boto3 to manage AWS EC2 instance snapshots.
 
-## Configuring
+## Configuring :wrench:
 
 shotty uses the configuration file created by the AWS cli. e.g.
 
 `aws configure --profile shotty`
 
-## Running
+## Running :rocket:
 
 To run the script
 
@@ -58,7 +58,7 @@ help            Only this message and exit.
 
  ```
 
- #### Update: List ec2 snapshots with volumes
+ #### :rotating_light:Update: List ec2 snapshots with volumes:rotating_light:
 
   ```
   pipenv run python shotty/shotty.py snapshots list
