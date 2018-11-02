@@ -5,7 +5,10 @@
 # Example:
 # pipenv run python shotty/shotty.py --project=spider (in this case
 # the project tag is set to spider on the ec2 instances)
+# Adding botocore to use the exception block to catch the state of the intance
+
 import boto3
+import botocore
 import click
 from datetime import datetime
 # import os
@@ -94,7 +97,6 @@ def create_snapshot(project):
         pipenv run python shotty/shotty.py instances snapshot --project="spider"
 
     '''
-
     instances = filter_instances(project)
 
     for i in instances:
@@ -104,7 +106,7 @@ def create_snapshot(project):
         # wait for the instances to stop befor taking
         # snapshots
         for v in i.volumes.all():
-            print("Creating snapshot of {0}".format(v.id))
+            print("   +++ Creating snapshot of {0}".format(v.id))
             v.create_snapshot(Description="Created by snapshot_analyzer 2018v1101")
         # restart the instance once the snapshot 
         # has started    
@@ -152,7 +154,12 @@ def stop_instances(project):
     instances = filter_instances(project)
     for i in instances:
         print("Stopping {0}... ".format(i.id))
-        i.stop()
+        try:
+            i.stop()
+        except botocore.exceptions.ClientError as e:
+            print(" Could not stop {0} ".fromat(i.id) + str(e))
+            continue
+
     return
 
 
@@ -163,7 +170,12 @@ def start_instances(project):
     instances = filter_instances(project)
     for i in instances:
         print("Starting {0}... ".format(i.id))
-        i.start()
+        try:
+            i.start()
+        except botocore.exceptions.ClientError as e:
+            print("Could not start {0}. ".format(i.id) + str(e))
+            continue
+
     return
 
 

@@ -66,3 +66,10 @@ help            Only this message and exit.
   Output:
 ```  
 snap-008d7, vol-06ffb, i-09e2b, 100%, Fri Nov  2 02:31:11 2018, Not Encrypted
+```
+
+### Instance Lifecycle
+
+![aws instance lifecycle](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/instance_lifecycle.png)
+Needifying to code to detect current instance state
+
