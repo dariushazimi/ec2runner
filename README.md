@@ -73,5 +73,15 @@ snap-008d7, vol-06ffb, i-09e2b, 100%, Fri Nov  2 02:31:11 2018, Not Encrypted
 ![aws instance lifecycle](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/images/instance_lifecycle.png)
 
 ### Note: 
-boto3 list the snapshots in chronological order with the most recent one at the top
+boto3 list the snapshots in chronological order with the most recent one at the top.
+
 The latest commit will show the most recent sussessful snap
+```
+pipenv run python shotty/shotty.py snapshots list
+pipenv run python shotty/shotty.py snapshots list --all
+pipenv run python shotty/shotty.py instances snapshot
+pipenv run python shotty/shotty.py snapshots list --help
+```
+More updates to come.
+
+code is never finished only abandoned :art:
