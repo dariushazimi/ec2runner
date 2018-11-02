@@ -49,5 +49,14 @@ help            Only this message and exit.
  pipenv run python shotty/shotty.py instances stop
  pipenv run python shotty/shotty.py instances stop --project=spider
  pipenv run python shotty/shotty.py volumes list
+
  ```
- 
+
+ #### Update: List ec2 snapshots with volumes
+
+  ```
+  pipenv run python shotty/shotty.py snapshots list
+  ```
+  Output:
+```  
+snap-008d7, vol-06ffb, i-09e2b, 100%, Fri Nov  2 02:31:11 2018, Not Encrypted
