@@ -1,5 +1,7 @@
 # aws-snapshot-analyzer
-AWS: Manage AWS Ec2 instance snapshots
+
+Build with :heart:
+AWS: Manage AWS Ec2 instance snapshots, start and stop instances, display the list of instances along with volumes and snapshots.
 
 ## About
 
@@ -15,9 +17,12 @@ shotty uses the configuration file created by the AWS cli. e.g.
 
 To run the script
 
-`pipenv run python shotty/shotty.py <command> (or start|stop) --project=PROJECTNAME`
+`pipenv run python shotty/shotty.py <command> <subcommand></subcommand> --project=PROJECTNAME`
 
-`<command>` is the list of commands to run:
+*command* is instances, volumes, or snapshots
+*project* is optional 
+
+the list of commands to run:
 -   list   List ec2 instances
 -   start  Start Ec2 instances
 -   stop   Stop Ec2 instances
