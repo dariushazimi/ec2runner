@@ -13,8 +13,30 @@ awsbutler uses the configuration file created by the AWS cli. e.g.
 
 `aws configure --profile awsbutler`
 
-## Running :rocket:
+## Installing awsbutler 2018 as a package
 
+`pip3 install https://github.com/dariushazimi/aws-snapshot-analyzer/blob/dev/awsbutler/awsbutler_2018-2018_11_01_0.1-py3-none-any.whl
+`
+
+To verify that is installed
+
+` pip3 show awsbutler-2018`
+
+
+## Running :rocket:
+### Updated
+
+` awsbutler instances list`
+` awsbutler instances stop`
+` awsbutler instances start`
+```
+Commands:
+  instances  Commands for instances
+  snapshots  Commands for snapshots
+  volumes    Commands for volumes
+  ```
+
+--Old setup
 To run the script
 
 `pipenv run python awsbutler/awsbutler.py <command> <subcommand>--project=PROJECTNAME`
