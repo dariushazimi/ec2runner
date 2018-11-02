@@ -10,7 +10,6 @@
 import boto3
 import botocore
 import click
-from datetime import datetime
 # import os
 
 session = boto3.Session(profile_name='snapshotty')
@@ -26,6 +25,10 @@ def filter_instances(project):
         instances = ec2.instances.all()
     return instances
 
+
+def has_pending_snapshot(volume):
+    snapshots = list(volume.snapshots.all())
+    return snapshots and snapshots[0].state == 'pending'
 
 @click.group()
 def cli():
@@ -113,13 +116,16 @@ def create_snapshot(project):
         print("stopping {0}... ".format(i.id))
         i.stop()
         i.wait_until_stopped()
-        # wait for the instances to stop befor taking
-        # snapshots
+        # wait for the instances to stop befor taking snapshots
         for v in i.volumes.all():
+            if has_pending_snapshot(v):
+                print("   Skipping {0}, snapshot already in progress".format(v.id))
+                continue
+
             print("   +++ Creating snapshot of {0}".format(v.id))
             v.create_snapshot(Description="Created by snapshot_analyzer 2018v1101")
-        # restart the instance once the snapshot 
-        # has started    
+        # restart the instance once the snapshot has started
+        
         print("starting {0}...".format(i.id))
         i.start()
         # We don't need to wait for the snapshot to complete
