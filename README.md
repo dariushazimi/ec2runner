@@ -35,5 +35,19 @@ shotty.py-list [OPTIONS]
 List Ec2 instances
 Options:
 
-~ --project Dariush Only instances for project (tag Project:Dariush)
-~ --help            Only this message and exit.
+project Dariush Only instances for project (tag Project:Dariush)
+help            Only this message and exit.
+
+## Examples - Latest version
+ Start instances with taged with project "spider"
+```
+ pipenv run python shotty/shotty.py start --project=spider
+ pipenv run python shotty/shotty.py --help
+ pipenv run python shotty/shotty.py instances --help
+ pipenv run python shotty/shotty.py instances list --help
+ pipenv run python shotty/shotty.py instances stop --help
+ pipenv run python shotty/shotty.py instances stop
+ pipenv run python shotty/shotty.py instances stop --project=spider
+ pipenv run python shotty/shotty.py volumes list
+ ```
+ 
