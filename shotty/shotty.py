@@ -87,7 +87,13 @@ def instances():
 @instances.command('snapshot', help="Create snapshots of all volumes")
 @click.option('--project', default=None, help="only intances for project (tag Project=<name>)")
 def create_snapshot(project):
-    ''' Create snapshots for ec2 instances'''
+    ''' Create snapshots for ec2 instances
+        Examples, list instances, start instances and take snap
+        pipenv run python shotty/shotty.py instances list
+        pipenv run python shotty/shotty.py instances start
+        pipenv run python shotty/shotty.py instances snapshot --project="spider"
+
+    '''
 
     instances = filter_instances(project)
 
@@ -112,13 +118,6 @@ def create_snapshot(project):
         # if in prod, and instances are servicing client, you want to make sure
         # you kick off the snapshot for one instance datetime A combination of a date and a time. Attributes: ()
         i.wait_until_running()
-        '''
-        Examples, list instances, start instances and take snap
-        pipenv run python shotty/shotty.py instances list
-        pipenv run python shotty/shotty.py instances start
-        pipenv run python shotty/shotty.py instances snapshot --project="spider"
-
-        '''
 
     print("Job's done!")
     return
