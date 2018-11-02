@@ -1,4 +1,4 @@
-# aws-snapshot-analyzer
+# awsbutler 2018
 
 Build with :heart:
 AWS: Manage AWS Ec2 instance snapshots, start and stop instances, display the list of instances along with volumes and snapshots.
@@ -9,15 +9,15 @@ This project uses boto3 to manage AWS EC2 instance snapshots.
 
 ## Configuring :wrench:
 
-shotty uses the configuration file created by the AWS cli. e.g.
+awsbutler uses the configuration file created by the AWS cli. e.g.
 
-`aws configure --profile shotty`
+`aws configure --profile awsbutler`
 
 ## Running :rocket:
 
 To run the script
 
-`pipenv run python shotty/shotty.py <command> <subcommand>--project=PROJECTNAME`
+`pipenv run python awsbutler/awsbutler.py <command> <subcommand>--project=PROJECTNAME`
 
 *command* is instances, volumes, or snapshots
 *subcommand*  - depends on the command
@@ -34,10 +34,10 @@ Options:
 
 
 Each command has its own help as well.:
-`pipenv run python shotty/shotty.py list --help`
+`pipenv run python awsbutler/awsbutler.py list --help`
 
 Usage:
-shotty.py-list [OPTIONS]
+awsbutler.py-list [OPTIONS]
 List Ec2 instances
 Options:
 
@@ -47,21 +47,21 @@ help            Only this message and exit.
 ## Examples - Latest version
  Start instances with taged with project "spider"
 ```
- pipenv run python shotty/shotty.py start --project=spider
- pipenv run python shotty/shotty.py --help
- pipenv run python shotty/shotty.py instances --help
- pipenv run python shotty/shotty.py instances list --help
- pipenv run python shotty/shotty.py instances stop --help
- pipenv run python shotty/shotty.py instances stop
- pipenv run python shotty/shotty.py instances stop --project=spider
- pipenv run python shotty/shotty.py volumes list
+ pipenv run python awsbutler/awsbutler.py start --project=spider
+ pipenv run python awsbutler/awsbutler.py --help
+ pipenv run python awsbutler/awsbutler.py instances --help
+ pipenv run python awsbutler/awsbutler.py instances list --help
+ pipenv run python awsbutler/awsbutler.py instances stop --help
+ pipenv run python awsbutler/awsbutler.py instances stop
+ pipenv run python awsbutler/awsbutler.py instances stop --project=spider
+ pipenv run python awsbutler/awsbutler.py volumes list
 
  ```
 
  #### :rotating_light:Update: List ec2 snapshots with volumes:rotating_light:
 
   ```
-  pipenv run python shotty/shotty.py snapshots list
+  pipenv run python awsbutler/awsbutler.py snapshots list
   ```
   Output:
 ```  
@@ -77,10 +77,10 @@ boto3 list the snapshots in chronological order with the most recent one at the 
 
 The latest commit will show the most recent sussessful snap
 ```
-pipenv run python shotty/shotty.py snapshots list
-pipenv run python shotty/shotty.py snapshots list --all
-pipenv run python shotty/shotty.py instances snapshot
-pipenv run python shotty/shotty.py snapshots list --help
+pipenv run python awsbutler/awsbutler.py snapshots list
+pipenv run python awsbutler/awsbutler.py snapshots list --all
+pipenv run python awsbutler/awsbutler.py instances snapshot
+pipenv run python awsbutler/awsbutler.py snapshots list --help
 ```
 More updates to come.
 
