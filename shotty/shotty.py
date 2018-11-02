@@ -84,6 +84,18 @@ def list_volumes(project):
 def instances():
     """ Commands for instances"""
 
+@instances.command('snapshot', help="Create snapshots of all volumes")
+@click.option('--project', default=None, help="only intances for project (tag Project=<name>)")
+def create_snapshot(project):
+    ''' Create snapshots for ec2 instances'''
+    instances = filter_instances(project)
+
+    for i in instances:
+        for v in i.volume.all():
+            print("Creating snapshot of {0}".format(v.id))
+            v.create_snapshot(Description="Created by snapshot_analyzer 2018v1101")
+    return
+
 
 @instances.command('list')
 @click.option('--project', default=None, help="only intances for project (tag Project=<name>)")
@@ -92,7 +104,6 @@ def list_instances(project):
     List ec2 instances
     '''
     instances = filter_instances(project)
-
     for i in instances:
         # if there are no tags, retrun an empty list 'or []'
         tags = {t['Key']: t['Value'] for t in i.tags or []}
