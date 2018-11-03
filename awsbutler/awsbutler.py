@@ -189,7 +189,11 @@ def start_instances(project):
     for i in instances:
         print("Starting {0}... ".format(i.id))
         try:
-            i.start()
+            if i.state['Name'] == 'running':
+                print("Instance {0}. is already running".format(i.id))
+            else:
+                print(" Starting {0}... ".format(i.id))
+                i.start()
         except botocore.exceptions.ClientError as e:
             print("Could not start {0}. ".format(i.id) + str(e))
             continue
