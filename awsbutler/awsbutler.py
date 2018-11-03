@@ -170,7 +170,7 @@ def stop_instances(project):
     for i in instances:
         try:
             if i.state['Name'] == 'stopped':
-                print("Instance {0}. is currently already".format(i.id))
+                print("Instance {0}. is already stopped".format(i.id))
             else:
                 print(" Stopping {0}... ".format(i.id))
                 i.stop()
@@ -187,12 +187,10 @@ def start_instances(project):
     "Start Ec2 instances"
     instances = filter_instances(project)
     for i in instances:
-        print("Starting {0}... ".format(i.id))
         try:
             if i.state['Name'] == 'running':
                 print("Instance {0}. is already running".format(i.id))
             else:
-                print(" Starting {0}... ".format(i.id))
                 i.start()
         except botocore.exceptions.ClientError as e:
             print("Could not start {0}. ".format(i.id) + str(e))
