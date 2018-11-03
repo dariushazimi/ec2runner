@@ -134,8 +134,7 @@ def create_snapshot(project):
         # wait till the intance is running to make sure
         # one of our instances are stopped at any given datetime A combination of a date and a time. Attributes: ()
         # if in prod, and instances are servicing client, you want to make sure
-        # you kick off the snapshot for one instance datetime A combination of a date and a time. Attributes: ()
-        i.wait_until_running()
+        # you kick off the snapshot for one instance datetime A combination of a date and a time.
 
     print("Job's done!")
     return
@@ -169,9 +168,12 @@ def stop_instances(project):
     "Stop Ec2 instances"
     instances = filter_instances(project)
     for i in instances:
-        print("Stopping {0}... ".format(i.id))
         try:
-            i.stop()
+            if i.state['Name'] == 'stopped':
+                print("Instance {0}. is currently already".format(i.id))
+            else:
+                print(" Stopping {0}... ".format(i.id))
+                i.stop()
         except botocore.exceptions.ClientError as e:
             print(" Could not stop {0} ".fromat(i.id) + str(e))
             continue
@@ -192,6 +194,54 @@ def start_instances(project):
             print("Could not start {0}. ".format(i.id) + str(e))
             continue
 
+    return
+
+
+@instances.command('reboot')
+@click.option('--project', default=None, help="only instance for project (tag Project=<name>")
+def reboot_instances(project):
+    "Reboot Ec2 instances"
+    ''' Check instance state to make sure it is running.
+         if instance is stopped, start instance, otherwise stop and then start.
+         AWS throttle the API access so, If you reboot multiple instances at once this will create a bit of problem. 
+        You might want to put a sleep for like 5 seconds between each attempt
+    '''
+
+    instances = filter_instances(project)
+    for i in instances:
+        print(i)
+        try:
+            if i.state['Name'] == 'stopped':
+            
+                print("Instance {0}... is stopped".format(i.id))
+                print("Starting {0}... starting...".format(i.id))
+                i.start()
+                i.wait_until_running()
+                print("Started {0}. ".format(i.id))
+
+            elif i.state['Name'] == 'pending':
+                print("pending.... {0}. ".format(i.id))
+                i.wait_until_running()
+                i.stop()
+                i.wait_until_stopped()
+                
+            elif i.state['Name'] == 'stopping':
+                print("stopping.... {0}. ".format(i.id))
+                i.wait_until_stopped()
+                i.start()
+                
+            else:
+                print("Stopping {0}... is stopping".format(i.id))
+                i.stop()
+                i.wait_until_stopped()
+                print("Stopped {0}. ".format(i.id))
+                print("Starting {0}... starting...".format(i.id))
+                i.start()
+                print("Started {0}. ".format(i.id))
+
+        except botocore.exceptions.ClientError as e:
+            print("Error rebooting {0}. ".format(i.id) + str(e))
+            continue
     return
 
 

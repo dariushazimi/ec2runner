@@ -1,6 +1,8 @@
 # awsbutler 2018
+![awsbutler](butler.png)
 
 Build with :heart:
+
 AWS: Manage AWS Ec2 instance snapshots, start and stop instances, display the list of instances along with volumes and snapshots.
 
 ## About:pencil2:
