@@ -3,7 +3,7 @@
 # Print a list of ec2 instances for a project tag (project tag is optional)
 # pipenv install pylint --d
 # Example:
-# pipenv run python shotty/shotty.py --project=spider (in this case
+# pipenv run python ec2runner/ec2runner.py --project=spider (in this case
 # the project tag is set to spider on the ec2 instances)
 # Adding botocore to use the exception block to catch the state of the intance
 
@@ -12,7 +12,7 @@ import botocore
 import click
 # import os
 
-session = boto3.Session(profile_name='snapshotty')
+session = boto3.Session(profile_name='ec2runner')
 ec2 = session.resource('ec2')
 
 
@@ -32,7 +32,7 @@ def has_pending_snapshot(volume):
 
 @click.group()
 def cli():
-    """shotty manages snapshots"""
+    """ec2runner manages snapshots"""
 
 
 @cli.group('snapshots')
@@ -48,9 +48,9 @@ def snapshots():
 def list_snapshots(project, list_all):
     '''
     List snapshots 
-    pipenv run python shotty/shotty.py snapshots list
-    pipenv run python shotty/shotty.py snapshots list --all
-    pipenv run python shotty/shotty.py snapshots list --help
+    pipenv run python ec2runner/ec2runner.py snapshots list
+    pipenv run python ec2runner/ec2runner.py snapshots list --all
+    pipenv run python ec2runner/ec2runner.py snapshots list --help
     '''
 
     instances= filter_instances(project)
@@ -67,7 +67,7 @@ def list_snapshots(project, list_all):
                 )))
                 
                 # Only show the most recent successful snap
-                # pipenv run python shotty/shotty.py snapshots list
+                # pipenv run python ec2runner/ec2runner.py snapshots list
                 if s.state == 'completed' and not list_all: break
     return
 
@@ -105,9 +105,9 @@ def instances():
 def create_snapshot(project):
     ''' Create snapshots for ec2 instances
         Examples, list instances, start instances and take snap
-        pipenv run python shotty/shotty.py instances list
-        pipenv run python shotty/shotty.py instances start
-        pipenv run python shotty/shotty.py instances snapshot --project="spider"
+        pipenv run python ec2runner/ec2runner.py instances list
+        pipenv run python ec2runner/ec2runner.py instances start
+        pipenv run python ec2runner/ec2runner.py instances snapshot --project="spider"
 
     '''
     instances = filter_instances(project)
