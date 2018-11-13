@@ -17,7 +17,7 @@ ec2runner uses the configuration file created by the AWS cli. e.g.
 #TODO
 
 `pip3 install
-https://github.com/dariushazimi/aws-snapshot-analyzer/blob/master/ec2runner/ec2runner_2018-2018_11_01_0.1-py3-none-any.whl
+https://github.com/dariushazimi/ec2runner/blob/master/dist/ec2runner_2018-2018_11_01_0.1-py3-none-any.whl
 `
 
 To verify that is installed
