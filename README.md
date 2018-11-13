@@ -162,3 +162,5 @@ Now you can run
 
 Now that you have the wheel file you can install it on any machine that has python3, even windows.
 All done in a few simple steps
+
+[<img src="https://github.com/dariushazimi/ec2runner/blob/master/ec2-diagram-20181113172010.svg">]()
