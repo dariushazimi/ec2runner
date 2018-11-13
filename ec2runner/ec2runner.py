@@ -10,7 +10,6 @@
 import boto3
 import botocore
 import click
-# import os
 
 session = boto3.Session(profile_name='ec2runner')
 ec2 = session.resource('ec2')
@@ -19,7 +18,7 @@ ec2 = session.resource('ec2')
 def filter_instances(project):
     instances = []
     if project:
-        filters = [{'Name': 'tag:Project', 'Values': [project]}]
+        filters = [{'Name': 'tag:project', 'Values': [project]}]
         instances = ec2.instances.filter(Filters=filters)
     else:
         instances = ec2.instances.all()
@@ -29,6 +28,7 @@ def filter_instances(project):
 def has_pending_snapshot(volume):
     snapshots = list(volume.snapshots.all())
     return snapshots and snapshots[0].state == 'pending'
+
 
 @click.group()
 def cli():
@@ -47,13 +47,13 @@ def snapshots():
               help="List all snapshots for each volume, not just the most recent one for project (tag project:<name>)")
 def list_snapshots(project, list_all):
     '''
-    List snapshots 
+    List snapshots
     pipenv run python ec2runner/ec2runner.py snapshots list
     pipenv run python ec2runner/ec2runner.py snapshots list --all
     pipenv run python ec2runner/ec2runner.py snapshots list --help
     '''
 
-    instances= filter_instances(project)
+    instances = filter_instances(project)
     for i in instances:
         for v in i.volumes.all():
             for s in v.snapshots.all():
@@ -65,7 +65,6 @@ def list_snapshots(project, list_all):
                     s.start_time.strftime("%c"),
                     s.encrypted and "Encrypted" or "Not Encrypted"
                 )))
-                
                 # Only show the most recent successful snap
                 # pipenv run python ec2runner/ec2runner.py snapshots list
                 if s.state == 'completed' and not list_all: break
@@ -76,14 +75,15 @@ def list_snapshots(project, list_all):
 def volumes():
     """Commands for volumes"""
 
+
 @volumes.command('list')
 @click.option('--project', default=None, help="only volumes for project (tag project:<name>)")
 def list_volumes(project):
     '''
-    List volumes 
+    List volumes
     '''
 
-    instances= filter_instances(project)
+    instances = filter_instances(project)
     for i in instances:
         for v in i.volumes.all():
             print(', '.join((
@@ -100,8 +100,9 @@ def list_volumes(project):
 def instances():
     """ Commands for instances"""
 
+
 @instances.command('snapshot', help="Create snapshots of all volumes")
-@click.option('--project', default=None, help="only intances for project (tag Project=<name>)")
+@click.option('--project', default=None, help="only intances for project (tag project=<name>)")
 def create_snapshot(project):
     ''' Create snapshots for ec2 instances
         Examples, list instances, start instances and take snap
@@ -125,7 +126,6 @@ def create_snapshot(project):
             print("   +++ Creating snapshot of {0}".format(v.id))
             v.create_snapshot(Description="Created by snapshot_analyzer 2018v1101")
         # restart the instance once the snapshot has started
-        
         print("starting {0}...".format(i.id))
         i.start()
         # We don't need to wait for the snapshot to complete
@@ -141,29 +141,30 @@ def create_snapshot(project):
 
 
 @instances.command('list')
-@click.option('--project', default=None, help="only intances for project (tag Project=<name>)")
+@click.option('--project', default=None, help="only intances for project (tag project=<name>)")
 def list_instances(project):
     '''
-    List ec2 instances
+    List EC2 instances
     '''
     instances = filter_instances(project)
     for i in instances:
-        # if there are no tags, retrun an empty list 'or []'
+        # if there is an instance with no tags, retrun an empty list
         tags = {t['Key']: t['Value'] for t in i.tags or []}
-        print(', '.join((
+        print(' '.join((
+            tags.get('Name', '<no name>'),
             i.id,
             i.instance_type,
             i.placement['AvailabilityZone'],
             i.state['Name'],
             i.public_dns_name,
-            tags.get('Project', '<no project>')
+            tags.get('project', '<no project>')
         )))
 
     return
 
 
 @instances.command('stop')
-@click.option('--project', default=None, help="only instance for project (tag Project=<name>")
+@click.option('--project', default=None, help="only instance for project (tag project=<name>")
 def stop_instances(project):
     "Stop Ec2 instances"
     instances = filter_instances(project)
@@ -182,7 +183,7 @@ def stop_instances(project):
 
 
 @instances.command('start')
-@click.option('--project', default=None, help="only instance for project (tag Project=<name>")
+@click.option('--project', default=None, help="only instance for project (tag project=<name>")
 def start_instances(project):
     "Start Ec2 instances"
     instances = filter_instances(project)
@@ -200,7 +201,7 @@ def start_instances(project):
 
 
 @instances.command('reboot')
-@click.option('--project', default=None, help="only instance for project (tag Project=<name>")
+@click.option('--project', default=None, help="only instance for project (tag project=<name>")
 def reboot_instances(project):
     "Reboot Ec2 instances"
     ''' Check instance state to make sure it is running.
@@ -214,7 +215,6 @@ def reboot_instances(project):
         print(i)
         try:
             if i.state['Name'] == 'stopped':
-            
                 print("Instance {0}... is stopped".format(i.id))
                 print("Starting {0}... starting...".format(i.id))
                 i.start()
@@ -226,12 +226,10 @@ def reboot_instances(project):
                 i.wait_until_running()
                 i.stop()
                 i.wait_until_stopped()
-                
             elif i.state['Name'] == 'stopping':
                 print("stopping.... {0}. ".format(i.id))
                 i.wait_until_stopped()
                 i.start()
-                
             else:
                 print("Stopping {0}... is stopping".format(i.id))
                 i.stop()

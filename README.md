@@ -1,37 +1,36 @@
-# awsbutler 2018
-![awsbutler](butler.png)
-
+# ec2runner script to start, stop instances and manage snaps
 Build with :heart:
 
 AWS: Manage AWS Ec2 instance snapshots, start and stop instances, display the list of instances along with volumes and snapshots.
 
 ## About:pencil2:
 
-This project uses boto3 to manage AWS EC2 instance snapshots.
+This project uses boto3 to manage AWS EC2 instances and snapshots.
 
 ## Configuring :wrench:
 
-awsbutler uses the configuration file created by the AWS cli. e.g.
+ec2runner uses the configuration file created by the AWS cli. e.g.
 
-`aws configure --profile awsbutler`
+`aws configure --profile ec2runner`
 
-## Installing awsbutler 2018 as a package
+## Installing ec2runner 2018 as a package
+#TODO
 
 `pip3 install
-https://github.com/dariushazimi/aws-snapshot-analyzer/blob/master/awsbutler/awsbutler_2018-2018_11_01_0.1-py3-none-any.whl
+https://github.com/dariushazimi/aws-snapshot-analyzer/blob/master/ec2runner/ec2runner_2018-2018_11_01_0.1-py3-none-any.whl
 `
 
 To verify that is installed
 
-` pip3 show awsbutler-2018`
+` pip3 show ec2runner-2018`
 
 
 ## Running :rocket:
 ### Updated
 
-` awsbutler instances list`
-` awsbutler instances stop`
-` awsbutler instances start`
+` ec2runner instances list`
+` ec2runner instances stop`
+` ec2runner instances start`
 ```
 Commands:
   instances  Commands for instances
@@ -42,7 +41,7 @@ Commands:
 --Old setup
 To run the script
 
-`pipenv run python awsbutler/awsbutler.py <command> <subcommand>--project=PROJECTNAME`
+`pipenv run python ec2runner/ec2runner.py <command> <subcommand>--project=PROJECTNAME`
 
 *command* is instances, volumes, or snapshots
 *subcommand*  - depends on the command
@@ -59,10 +58,10 @@ Options:
 
 
 Each command has its own help as well.:
-`pipenv run python awsbutler/awsbutler.py list --help`
+`pipenv run python ec2runner/ec2runner.py list --help`
 
 Usage:
-awsbutler.py-list [OPTIONS]
+ec2runner.py-list [OPTIONS]
 List Ec2 instances
 Options:
 
@@ -72,21 +71,21 @@ help            Only this message and exit.
 ## Examples - Latest version
  Start instances with taged with project "spider"
 ```
- pipenv run python awsbutler/awsbutler.py start --project=spider
- pipenv run python awsbutler/awsbutler.py --help
- pipenv run python awsbutler/awsbutler.py instances --help
- pipenv run python awsbutler/awsbutler.py instances list --help
- pipenv run python awsbutler/awsbutler.py instances stop --help
- pipenv run python awsbutler/awsbutler.py instances stop
- pipenv run python awsbutler/awsbutler.py instances stop --project=spider
- pipenv run python awsbutler/awsbutler.py volumes list
+ pipenv run python ec2runner/ec2runner.py start --project=spider
+ pipenv run python ec2runner/ec2runner.py --help
+ pipenv run python ec2runner/ec2runner.py instances --help
+ pipenv run python ec2runner/ec2runner.py instances list --help
+ pipenv run python ec2runner/ec2runner.py instances stop --help
+ pipenv run python ec2runner/ec2runner.py instances stop
+ pipenv run python ec2runner/ec2runner.py instances stop --project=spider
+ pipenv run python ec2runner/ec2runner.py volumes list
 
  ```
 
  #### :rotating_light:Update: List ec2 snapshots with volumes:rotating_light:
 
   ```
-  pipenv run python awsbutler/awsbutler.py snapshots list
+  pipenv run python ec2runner/ec2runner.py snapshots list
   ```
   Output:
 ```  
@@ -102,11 +101,70 @@ boto3 list the snapshots in chronological order with the most recent one at the 
 
 The latest commit will show the most recent sussessful snap
 ```
-pipenv run python awsbutler/awsbutler.py snapshots list
-pipenv run python awsbutler/awsbutler.py snapshots list --all
-pipenv run python awsbutler/awsbutler.py instances snapshot
-pipenv run python awsbutler/awsbutler.py snapshots list --help
+pipenv run python ec2runner/ec2runner.py snapshots list
+pipenv run python ec2runner/ec2runner.py snapshots list --all
+pipenv run python ec2runner/ec2runner.py instances snapshot
+pipenv run python ec2runner/ec2runner.py snapshots list --help
 ```
 More updates to come.
 
 code is never finished only abandoned :art:
+### How to package your code 
+Install setup tools with -d since you only need it for development
+`pipevn install -d setuptools`
+
+Next we create a `setup.py` file.
+`setup.py` file essentially tells setuptools how to build your package
+It does this by creating a function called setup
+
+here is the `setup.py` file
+
+```
+from setuptools import setup
+
+setup(
+    name="ec2runner-2018",
+    version="2018-11-01-0.1",
+    author="Dariush Azimi",
+    author_email="my email addr",
+    description="ec2runner-2018 is a tool to manage AWS EC2 snapshots, list,stop,start intances and show related volumes",
+    license="GPLv3+",
+    packages=['ec2runner'],
+    url="https://github.com/dariushazimi/ec2runner",
+    install_requires=[
+        'click',
+        'boto3'
+    ],
+    entry_points='''
+        [console_scripts]
+        ec2runner=ec2runner.ec2runner:cli
+        '''
+
+)
+```
+Save the file.
+Next we need to generate a wheel file
+Here is how to create the wheel file
+
+` pipenv run python setup.py bdist_wheel`
+
+Take a look inside the dist folder
+`ls -al dist`
+
+The wheel file is a python code that lets your script run
+Now that we have the package we can install it like any other package `pip3 install ec2runner_2018-2018_11_01_0.1-py3-none-any.whl`
+
+To see that is installed on your system do:
+`pip3 show ec2runner-2018`
+
+Now you can run 
+` ec2runner instances list`
+
+Now that you have the wheel file you can install it on any machine that has python3, even windows.
+All done in a few simple steps
+```mermaid
+  graph TD
+  A(install setup tools) -->|create setup.py file| B(Verify setup.py file)
+  B --> |pipenv run python setup.py bdist_wheel|C(generate wheel file)
+  C -->|ls -al dist|D(to confirm dist folder content)
+  D-->|pip3 install ec2runner_2018-2018_11_01_0.1-py3-none-any.whl|E(install it with pip3)
