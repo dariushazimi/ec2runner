@@ -162,9 +162,3 @@ Now you can run
 
 Now that you have the wheel file you can install it on any machine that has python3, even windows.
 All done in a few simple steps
-```mermaid
-  graph TD
-  A(install setup tools) -->|create setup.py file| B(Verify setup.py file)
-  B --> |pipenv run python setup.py bdist_wheel|C(generate wheel file)
-  C -->|ls -al dist|D(to confirm dist folder content)
-  D-->|pip3 install ec2runner_2018-2018_11_01_0.1-py3-none-any.whl|E(install it with pip3)
